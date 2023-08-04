@@ -1,7 +1,7 @@
 name: Sync repository info from package.json
 
 env:
-  GITHUB_TOKEN: ${{ github.token }}
+  GITHUB_TOKEN: ${{ secrets.UPDATE_REPO_INFO_PAT }}
 
 on:
   push:
@@ -11,8 +11,6 @@ on:
       - "package.json"
       - ".github/workflows/update-repo-info.yaml"
   workflow_dispatch:
-
-permissions: write-all
 
 jobs:
   update_repo_info:
