@@ -1,5 +1,6 @@
 {
   "name": "provision-by-claim",
+  "description": "Using Lambda function to register device in Provision by Claim",
   "version": "0.0.0-development",
   "type": "module",
   "scripts": {
