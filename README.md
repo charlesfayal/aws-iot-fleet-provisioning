@@ -1,5 +1,11 @@
 # Device Provisioning Using Claim Certificates and Lambda Function
 
+[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
+[![Renovate](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com)
+[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier/)
+[![ESLint: TypeScript](https://img.shields.io/badge/ESLint-TypeScript-blue.svg)](https://github.com/typescript-eslint/typescript-eslint)
+
 ## Introduction
 
 This document explains how to provision a device using claim certificates and a
@@ -32,6 +38,8 @@ limit.
 ## Flow Diagram
 
 Here is a high-level flow diagram of the proposed solution:
+
+<img width="443" alt="image" src="https://github.com/pudkrong/provision-by-claim/assets/2525169/84631a11-cf50-4472-bf61-ba358852c089">
 
 ## Steps
 
