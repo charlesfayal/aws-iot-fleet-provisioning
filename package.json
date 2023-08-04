@@ -1,5 +1,5 @@
 {
-  "name": "fleet-provision",
+  "name": "provision-by-claim",
   "version": "0.0.0-development",
   "type": "module",
   "scripts": {
@@ -10,12 +10,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hello-nrfcloud/backend.git"
+    "url": "git+https://github.com/pudkrong/provision-by-claim.git"
   },
   "bugs": {
-    "url": "https://github.com/hello-nrfcloud/backend/issues"
+    "url": "https://github.com/pudkrong/provision-by-claim/issues"
   },
-  "homepage": "https://github.com/hello-nrfcloud/backend#readme",
+  "homepage": "https://github.com/pudkrong/provision-by-claim#readme",
   "keywords": [
     "nordicsemiconductor",
     "fleet",
