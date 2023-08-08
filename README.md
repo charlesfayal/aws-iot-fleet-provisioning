@@ -41,7 +41,7 @@ limit.
 
 Here is a high-level flow diagram of the proposed solution:
 
-<img width="443" alt="image" src="https://github.com/pudkrong/provision-by-claim/assets/2525169/84631a11-cf50-4472-bf61-ba358852c089">
+<img width="443" alt="image" src="https://github.com/NordicPlayground/aws-iot-core-fleet-provisioning-with-nrf9160/assets/2525169/84631a11-cf50-4472-bf61-ba358852c089">
 
 ## Steps
 

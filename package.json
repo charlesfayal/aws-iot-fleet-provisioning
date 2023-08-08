@@ -1,5 +1,5 @@
 {
-  "name": "provision-by-claim",
+  "name": "aws-iot-core-fleet-provisioning-with-nrf9160",
   "description": "Using Lambda function to register device in Provision by Claim",
   "version": "0.0.0-development",
   "type": "module",
@@ -11,12 +11,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pudkrong/provision-by-claim.git"
+    "url": "git+https://github.com/NordicPlayground/aws-iot-core-fleet-provisioning-with-nrf9160.git"
   },
   "bugs": {
-    "url": "https://github.com/pudkrong/provision-by-claim/issues"
+    "url": "https://github.com/NordicPlayground/aws-iot-core-fleet-provisioning-with-nrf9160/issues"
   },
-  "homepage": "https://github.com/pudkrong/provision-by-claim#readme",
+  "homepage": "https://github.com/NordicPlayground/aws-iot-core-fleet-provisioning-with-nrf9160#readme",
   "keywords": [
     "nordicsemiconductor",
     "fleet",
