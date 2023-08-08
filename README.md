@@ -8,9 +8,11 @@
 
 ## Introduction
 
-This document explains how to provision a device using claim certificates and a
-Lambda function in AWS IoT. It also provides a step-by-step guide on how to set
-up the demo environment and run the simulation.
+This document explains the process of provisioning a device using claim
+certificates and a Lambda function. This solution addresses the challenge of
+dealing with certificate sizes that surpass the memory limitations of the device
+within the AWS IoT ecosystem. It also provides a step-by-step guide on how to
+set up the demo environment and run the simulation.
 
 ## Background
 
@@ -60,9 +62,16 @@ simulation:
 
 ## Security Considerations
 
-When creating policies for the claim certificate, we should allow the device to
-publish and subscribe to the topic under its own ID. We can create a policy like
-the following
+Securing the process of publishing a certificate back to the device via Lambda
+involves careful considerations. To ensure controlled communication exclusively
+between the Lambda function and the device, certain restrictions should be
+implemented.
+
+One of the primary steps involves crafting policies to manage the certificate
+claiming process. These policies should grant the device specific permissions,
+specifically enabling it to both publish and subscribe to a designated topic.
+These permissions should be tied to the unique device ID. Formulating a policy
+in line with these requirements would resemble the following:
 
 ```json
 {
@@ -104,6 +113,14 @@ the following
 Provide your AWS credentials, for example, using the `.envrc` file (see
 [the example](.envrc.example)).
 
+**Note**
+
+- If opting for `.envrc`, ensure prior installation of the
+  [direnv](https://direnv.net/) tool.
+- Ensure that the AWS credentials you provide possess adequate permissions for
+  CDK execution. For the sake of the demonstration, it's advisable to grant
+  administrative privileges.
+
 ## Step 2: Install Dependencies
 
 Install the dependencies using npm:
@@ -121,8 +138,12 @@ used by the Lambda function:
 ./cli.sh generate-lambda-provision-certificate <topic> <templateName>
 ```
 
-Replace `<topic>` with the name of the topic in which the device will request a
-certificate, and `<templateName>` with the name of the provision template.
+Replace `<topic>` with the designated topic's name, where the device will
+initiate a certificate request. Similarly, replace `<templateName>` with the
+name of the provision template. This template, responsible for configuring cloud
+and device settings within AWS IoT, will be automatically generated during the
+CDK deployment process in this demonstration, see
+[Fleet.ts](cdk/resources/Fleet.ts).
 
 ## Step 4: Set Up the Demo Environment
 
@@ -130,7 +151,7 @@ Set up the demo environment by running the commands.
 
 ```bash
 npx cdk bootstrap # if this is the first time you use CDK in this account
-npx cdk deploy
+npx cdk deploy --require-approval never
 ```
 
 ## Step 5: Run Simulation
@@ -142,3 +163,6 @@ a new certificate, run the following command:
 ./cli.sh generate-claim-certificate # if this is the first time you run the device simulator
 ./cli.sh simulate-device
 ```
+
+Upon execution, you will receive two messages containing the newly acquired
+certificate and private key.

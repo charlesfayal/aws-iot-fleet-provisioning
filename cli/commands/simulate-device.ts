@@ -9,6 +9,8 @@ import { randomUUID } from 'node:crypto'
 import type { SSMClient } from '@aws-sdk/client-ssm'
 import { EventEmitter } from 'node:events'
 
+type EventCallback = (...args: any[]) => void
+
 export const simulateDeviceCommand = ({
 	iot,
 	ssm,
@@ -61,6 +63,7 @@ export const simulateDeviceCommand = ({
 
 		const clientId = randomUUID()
 		const connection = await new Promise<{
+			on: (event: string, callback: EventCallback) => void
 			client: MqttClient
 			end: () => Promise<void>
 			publish: (topic: string, payload: Record<string, any>) => void
@@ -90,6 +93,7 @@ export const simulateDeviceCommand = ({
 			mqttClient.on('connect', () => {
 				console.log(chalk.green('connected!'))
 				resolve({
+					on: (event, cb) => em.on(event, cb),
 					client: mqttClient,
 					end: async () => {
 						mqttClient.end()
@@ -144,6 +148,20 @@ export const simulateDeviceCommand = ({
 
 		connection.publish(`${provision.topic}/${clientId}/json`, {
 			foo: 'bar',
+		})
+
+		const receivedMessages = new Set<string>()
+		connection.on('data', async (message: Record<string, unknown>) => {
+			Object.keys(message).forEach((key) => receivedMessages.add(key))
+			if (receivedMessages.size === 2) {
+				console.log()
+				console.log(
+					chalk.green(
+						`2 messages received. Writing a new certificate to device`,
+					),
+				)
+				await connection.end()
+			}
 		})
 	},
 	help: 'Simulates a device',
