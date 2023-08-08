@@ -1,4 +1,3 @@
-import middy from '@middy/core'
 import { logger } from './util/logger.js'
 import mqtt, { MqttClient } from 'mqtt'
 import { fromEnv } from '@nordicsemiconductor/from-env'
@@ -131,11 +130,11 @@ const provisionCertificate = async ({
 	return promise
 }
 
-const h = async (event: {
+export const handler = async (event: {
 	message: Record<string, unknown>
 	topic: string
 	timestamp: number
-}) => {
+}): Promise<void> => {
 	log.debug(`event`, { event })
 
 	const clientId = event.topic.replace(provisionTopic, '').split('/')?.[1] ?? ''
@@ -182,5 +181,3 @@ const h = async (event: {
 		client.end()
 	}
 }
-
-export const handler = middy(h)
