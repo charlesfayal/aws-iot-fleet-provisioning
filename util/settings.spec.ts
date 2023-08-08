@@ -1,28 +1,5 @@
 import type { SSMClient } from '@aws-sdk/client-ssm'
-import {
-	Scope,
-	getSettingsOptional,
-	settingsPath,
-	getSettings,
-} from './settings.js'
-
-describe('getSettingsOptional()', () => {
-	it('should return the given default value if parameter does not exist', async () => {
-		const stackConfig = getSettingsOptional<
-			Record<string, string>,
-			Record<string, never>
-		>({
-			ssm: {
-				send: jest.fn().mockResolvedValue({ Parameters: undefined }),
-			} as unknown as SSMClient,
-			stackName: 'STACK_NAME',
-			scope: Scope.LAMBDA_CLAIM_CERTIFICATE,
-		})
-
-		const result = await stackConfig({})
-		expect(result).toEqual({})
-	})
-})
+import { Scope, settingsPath, getSettings } from './settings.js'
 
 describe('settingsPath()', () => {
 	it('should produce a fully qualified parameter name', () =>

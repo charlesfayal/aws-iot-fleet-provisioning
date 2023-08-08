@@ -2,7 +2,6 @@ import chalk from 'chalk'
 import { program } from 'commander'
 import psjon from '../package.json'
 import type { CommandDefinition } from './commands/CommandDefinition'
-import { env } from '../cdk/helpers/env.js'
 import { STSClient } from '@aws-sdk/client-sts'
 import { generateClaimCertificate } from './commands/generate-claim-certificate.js'
 import { IoTClient } from '@aws-sdk/client-iot'
@@ -10,12 +9,13 @@ import { SSMClient } from '@aws-sdk/client-ssm'
 import { simulateDeviceCommand } from './commands/simulate-device.js'
 import { generateLambdaProvisionCertificate } from './commands/generate-lambda-provision-certificate.js'
 import { STACK_NAME } from '../cdk/stacks/stackConfig.js'
+import { awsEnvironment } from '../cdk/helpers/awsEnvironment.js'
 
 const iot = new IoTClient({})
 const ssm = new SSMClient({})
 const sts = new STSClient({})
 
-const accountEnv = await env({ sts })
+const accountEnv = await awsEnvironment({ sts })
 
 const die = (err: Error, origin: any) => {
 	console.error(`An unhandled exception occurred!`)

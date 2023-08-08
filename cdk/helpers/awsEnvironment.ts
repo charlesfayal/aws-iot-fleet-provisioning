@@ -1,7 +1,7 @@
 import { GetCallerIdentityCommand, STSClient } from '@aws-sdk/client-sts'
 import type { Environment } from 'aws-cdk-lib'
 
-export const env = async ({
+export const awsEnvironment = async ({
 	sts,
 }: {
 	sts: STSClient
