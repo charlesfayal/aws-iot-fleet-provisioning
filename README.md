@@ -166,3 +166,29 @@ a new certificate, run the following command:
 
 Upon execution, you will receive two messages containing the newly acquired
 certificate and private key.
+
+# Deprovisioning the Demo
+
+## Step 1: Destroy the Stack
+
+Execute the following command to destroy the stack:
+
+```bash
+npx cdk destroy --force
+```
+
+## Step 2: Revoke the Lambda Claim Certificate
+
+To revoke the Lambda claim certificate, run the following command:
+
+```bash
+./cli.sh generate-lambda-provision-certificate -X <topic> <templateName>
+```
+
+## Step 3: Revoke the Claim Certificate
+
+To revoke the claim certificate, take these step:
+
+```bash
+./cli.sh generate-claim-certificate -X
+```
