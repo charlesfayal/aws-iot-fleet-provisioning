@@ -1,4 +1,4 @@
-import { App, aws_lambda as Lambda, Stack, type Environment } from 'aws-cdk-lib'
+import { App, aws_lambda as Lambda, Stack } from 'aws-cdk-lib'
 import type { BackendLambdas } from '../BackendLambdas.js'
 import type { PackedLayer } from '../helpers/lambdas/packLayer.js'
 import { STACK_NAME } from './stackConfig.js'
@@ -12,18 +12,14 @@ export class BackendStack extends Stack {
 		{
 			lambdaSources,
 			layer,
-			env,
 			iotEndpoint,
 		}: {
 			lambdaSources: BackendLambdas
 			layer: PackedLayer
-			env: Required<Environment>
 			iotEndpoint: string
 		},
 	) {
-		super(parent, STACK_NAME, {
-			env,
-		})
+		super(parent, STACK_NAME)
 
 		const baseLayer = new Lambda.LayerVersion(this, 'baseLayer', {
 			code: new LambdaSource(this, {
