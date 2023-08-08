@@ -187,7 +187,7 @@ To revoke the Lambda claim certificate, run the following command:
 
 ## Step 3: Revoke the Claim Certificate
 
-To revoke the claim certificate, take these step:
+To revoke the claim certificate, take this step:
 
 ```bash
 ./cli.sh generate-claim-certificate -X
