@@ -148,7 +148,7 @@ Set up the demo environment by running the commands.
 
 ```bash
 npx cdk bootstrap # if this is the first time you use CDK in this account
-npx cdk deploy --require-approval never
+npx cdk deploy
 ```
 
 ## Step 5: Run Simulation
