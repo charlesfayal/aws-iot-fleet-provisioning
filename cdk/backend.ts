@@ -28,5 +28,4 @@ new BackendApp({
 	}),
 	iotEndpoint: endpoint,
 	env: accountEnv,
-	isTest: process.env.IS_TEST === '1',
 })
