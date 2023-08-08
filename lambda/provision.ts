@@ -1,7 +1,6 @@
 import { logger } from './util/logger.js'
 import mqtt, { MqttClient } from 'mqtt'
 import { fromEnv } from '@nordicsemiconductor/from-env'
-import { defer } from './util/defer.js'
 import { getSettings, Scope } from '../util/settings.js'
 import { SSMClient } from '@aws-sdk/client-ssm'
 
@@ -76,58 +75,73 @@ const provisionCertificate = async ({
 	client: MqttClient
 	parameters: Record<string, unknown>
 }): Promise<ProvisionResponse> => {
-	const { promise, resolve, reject } = defer<ProvisionResponse>(10000)
 	let result: ProvisionResponse
 
-	client
-		.on('connect', () => {
-			client.subscribe([
-				`$aws/certificates/create/json/accepted`,
-				`$aws/certificates/create/json/rejected`,
-				`$aws/provisioning-templates/${templateName}/provision/json/accepted`,
-				`$aws/provisioning-templates/${templateName}/provision/json/rejected`,
-			])
+	return new Promise((resolve, reject) => {
+		const timer = setTimeout(() => {
+			reject(new Error('Timeout'))
+		}, 10 * 1000)
 
-			client.publish('$aws/certificates/create/json', JSON.stringify({}))
-		})
-		.on('error', (error) => {
-			log.error(`mqtt error`, { error })
-		})
-		.on('message', (topic, message) => {
-			const data = JSON.parse(message.toString())
-			if (topic.includes('rejected')) {
-				log.error(`Certificate rejected`, { data })
-				return reject(new Error((data as ErrorMessage).errorMessage))
-			}
+		const success = (result: ProvisionResponse): void => {
+			clearTimeout(timer)
+			resolve(result)
+		}
 
-			switch (topic.split('/')?.[1]) {
-				case 'certificates':
-					result = {
-						...result,
-						certificates: data,
-					}
-					client.publish(
-						`$aws/provisioning-templates/${templateName}/provision/json`,
-						JSON.stringify({
-							certificateOwnershipToken: data.certificateOwnershipToken,
-							parameters,
-						}),
-					)
-					break
-				case 'provisioning-templates':
-					result = {
-						...result,
-						thing: data,
-					}
-					resolve(result)
-					break
-				default:
-					return reject(new Error(`Unknown topic: ${topic}`))
-			}
-		})
+		const fail = (reason: Error): void => {
+			clearTimeout(timer)
+			reject(reason)
+		}
 
-	client.connect()
-	return promise
+		client.connect()
+		client
+			.on('connect', () => {
+				client.subscribe([
+					`$aws/certificates/create/json/accepted`,
+					`$aws/certificates/create/json/rejected`,
+					`$aws/provisioning-templates/${templateName}/provision/json/accepted`,
+					`$aws/provisioning-templates/${templateName}/provision/json/rejected`,
+				])
+
+				client.publish('$aws/certificates/create/json', JSON.stringify({}))
+			})
+			.on('message', (topic, message) => {
+				const data = JSON.parse(message.toString())
+				if (topic.includes('rejected')) {
+					log.error(`Certificate rejected`, { data })
+					return fail(new Error((data as ErrorMessage).errorMessage))
+				}
+
+				switch (topic.split('/')?.[1]) {
+					case 'certificates':
+						result = {
+							...result,
+							certificates: data,
+						}
+						client.publish(
+							`$aws/provisioning-templates/${templateName}/provision/json`,
+							JSON.stringify({
+								certificateOwnershipToken: data.certificateOwnershipToken,
+								parameters,
+							}),
+						)
+						break
+					case 'provisioning-templates':
+						result = {
+							...result,
+							thing: data,
+						}
+
+						clearTimeout(timer)
+						return success(result)
+					default:
+						return fail(new Error(`Unknown topic: ${topic}`))
+				}
+			})
+			.on('error', (error) => {
+				log.error(`mqtt error`, { error })
+				fail(error)
+			})
+	})
 }
 
 export const handler = async (event: {
