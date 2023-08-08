@@ -74,23 +74,6 @@
     "node": ">=20",
     "npm": ">=9"
   },
-  "release": {
-    "branches": [
-      "saga"
-    ],
-    "remoteTags": true,
-    "plugins": [
-      "@semantic-release/commit-analyzer",
-      "@semantic-release/release-notes-generator",
-      [
-        "@semantic-release/github",
-        {
-          "successComment": false,
-          "failTitle": false
-        }
-      ]
-    ]
-  },
   "prettier": "@nordicsemiconductor/asset-tracker-cloud-code-style/.prettierrc",
   "dependencies": {
     "@middy/core": "4.5.5",
