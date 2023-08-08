@@ -19,11 +19,7 @@ const endpoint = (
 ).endpointAddress
 if (endpoint === undefined) throw new Error(`IoT endpoint is not found`)
 
-const packagesInLayer: string[] = [
-	'@nordicsemiconductor/from-env',
-	'mqtt',
-	'@middy/core',
-]
+const packagesInLayer: string[] = ['@nordicsemiconductor/from-env', 'mqtt']
 new BackendApp({
 	lambdaSources: await packBackendLambdas(),
 	layer: await packLayer({

@@ -76,7 +76,6 @@
   },
   "prettier": "@nordicsemiconductor/asset-tracker-cloud-code-style/.prettierrc",
   "dependencies": {
-    "@middy/core": "4.5.5",
     "@nordicsemiconductor/from-env": "2.0.0"
   },
   "jest": {
