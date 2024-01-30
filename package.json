@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "npx globstar -- npx tsx --no-warnings --test --test-reporter spec \"!(dist|node_modules)/**/*.spec.ts\"",
-    "prepare": "husky install && check-node-version --package",
+    "prepare": "husky && check-node-version --package",
     "deploy": "cdk deploy",
     "synth": "cdk synth"
   },
@@ -51,7 +51,7 @@
     "eslint-plugin-unicorn": "48.0.1",
     "glob": "10.3.3",
     "globstar": "1.0.0",
-    "husky": "8.0.3",
+    "husky": "9.0.7",
     "lint-staged": "13.2.3",
     "mqtt": "5.0.2",
     "prettier": "3.0.1",
