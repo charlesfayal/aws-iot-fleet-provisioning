@@ -11,6 +11,6 @@ export const awsEnvironment = async ({
 	return {
 		account: Account,
 		region:
-			process.env.AWS_REGION ?? process.env.AWS_DEFAULT_REGION ?? 'eu-west-1',
+			process.env.AWS_REGION ?? process.env.AWS_DEFAULT_REGION ?? 'us-east-1',
 	}
 }
