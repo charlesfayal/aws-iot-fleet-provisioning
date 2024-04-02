@@ -130,6 +130,7 @@ const provisionCertificate = async ({
 							...result,
 							thing: data,
 						}
+						console.log(`Provisioned thing`, { data })
 
 						clearTimeout(timer)
 						return success(result)
@@ -168,6 +169,7 @@ export const handler = async (event: {
 			client,
 			parameters: event.message,
 		})
+		console.log(`Provisioned thing`, { thing })
 
 		// Break messages into smaller chunks
 		log.debug(`publish result on topic: ${provisionTopic}/${clientId}/accepted`)

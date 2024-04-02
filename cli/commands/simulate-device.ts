@@ -147,7 +147,8 @@ export const simulateDeviceCommand = ({
 		process.on('SIGINT', quit)
 
 		connection.publish(`${provision.topic}/${clientId}/json`, {
-			foo: 'bar',
+			ThingName: 'testDevice',
+			SerialNumber: '123456',
 		})
 
 		const receivedMessages = new Set<string>()

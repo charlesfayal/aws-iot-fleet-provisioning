@@ -36,6 +36,9 @@ export class Fleet extends Construct {
 			templateName: templateNameParameter.stringValue,
 			templateBody: JSON.stringify({
 				Parameters: {
+					ThingName: {
+						Type: 'String',
+					},
 					SerialNumber: {
 						Type: 'String',
 					},
@@ -44,6 +47,23 @@ export class Fleet extends Construct {
 					},
 				},
 				Resources: {
+					thing: {
+						Type: 'AWS::IoT::Thing',
+						Properties: {
+							ThingName: { Ref: 'ThingName' },
+							AttributePayload: {
+								version: 'v0_1',
+								serialNumber: { Ref: 'SerialNumber' },
+							},
+							ThingTypeName: 'building_monitor',
+							ThingGroups: ['cellular_devices'],
+						},
+						OverrideSettings: {
+							AttributePayload: 'MERGE',
+							ThingTypeName: 'REPLACE',
+							ThingGroups: 'DO_NOTHING',
+						},
+					},
 					policy: {
 						Type: 'AWS::IoT::Policy',
 						Properties: {
@@ -61,7 +81,7 @@ export class Fleet extends Construct {
 										Resource: [
 											`arn:aws:iot:${Stack.of(this).region}:${
 												Stack.of(this).account
-											}:topic/any/topic/for/device/*`,
+											}:*`,
 										],
 									},
 									{
@@ -70,7 +90,7 @@ export class Fleet extends Construct {
 										Resource: [
 											`arn:aws:iot:${Stack.of(this).region}:${
 												Stack.of(this).account
-											}:topicfilter/any/topic/for/device/*`,
+											}:*`,
 										],
 									},
 								],
