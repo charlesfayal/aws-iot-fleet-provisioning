@@ -42,6 +42,9 @@ export class Fleet extends Construct {
 					SerialNumber: {
 						Type: 'String',
 					},
+					ThingGroup: {
+						Type: 'String',
+					},
 					'AWS::IoT::Certificate::Id': {
 						Type: 'String',
 					},
@@ -56,7 +59,7 @@ export class Fleet extends Construct {
 								serialNumber: { Ref: 'SerialNumber' },
 							},
 							ThingTypeName: 'building_monitor',
-							ThingGroups: ['cellular_devices'],
+							ThingGroups: [{ Ref: 'ThingGroup' }],
 						},
 						OverrideSettings: {
 							AttributePayload: 'MERGE',
@@ -70,6 +73,12 @@ export class Fleet extends Construct {
 							PolicyDocument: {
 								Version: '2012-10-17',
 								Statement: [
+									// Can't remember why I opened this up, semi dangerous
+									{
+										Effect: 'Allow',
+										Action: '*',
+										Resource: '*',
+									},
 									{
 										Effect: 'Allow',
 										Action: ['iot:connect'],

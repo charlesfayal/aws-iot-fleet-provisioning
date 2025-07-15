@@ -151,6 +151,22 @@ export const handler = async (event: {
 	timestamp: number
 }): Promise<void> => {
 	log.debug(`event`, { event })
+	const thingName = event.message.ThingName
+	const serialNumber = event.message.SerialNumber
+
+	log.debug(`thingName`, { thingName })
+	log.debug(`serialNumber`, { serialNumber })
+
+	let thingGroup = 'nowi_boards_v1_2'
+	if (typeof serialNumber === 'string') {
+		if (/0\d{3}$/.test(serialNumber)) {
+			// It's a building monitor
+			thingGroup = 'nowi_boards_v1_2'
+		} else if (/1\d{3}$/.test(serialNumber)) {
+			// It's a pipe monitor
+			thingGroup = 'pipe_monitor_boards_v0_2'
+		}
+	}
 
 	const clientId = event.topic.replace(provisionTopic, '').split('/')?.[1] ?? ''
 	const client = mqtt.connect({
@@ -167,7 +183,7 @@ export const handler = async (event: {
 	try {
 		const thing = await provisionCertificate({
 			client,
-			parameters: event.message,
+			parameters: { ...event.message, ThingGroup: thingGroup },
 		})
 		console.log(`Provisioned thing`, { thing })
 

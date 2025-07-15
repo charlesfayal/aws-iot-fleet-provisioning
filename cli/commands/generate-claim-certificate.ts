@@ -17,12 +17,12 @@ import type { CommandDefinition } from './CommandDefinition.js'
 import type { Environment } from 'aws-cdk-lib'
 import { writeFile, mkdir } from 'node:fs/promises'
 import path from 'node:path'
-import { getProvisionSettings } from '../../settings/settings.js'
+// import { getProvisionSettings } from '../../settings/settings.js'
 import type { SSMClient } from '@aws-sdk/client-ssm'
 
 export const generateClaimCertificate = ({
 	iot,
-	ssm,
+	// ssm,
 	env,
 }: {
 	iot: IoTClient
@@ -84,13 +84,14 @@ export const generateClaimCertificate = ({
 			return
 		}
 
-		const provisionSettings = await getProvisionSettings({
-			ssm,
-			stackName,
-		})()
-		const topic = provisionSettings.topic
+		// const provisionSettings = await getProvisionSettings({
+		// 	ssm,
+		// 	stackName,
+		// })()
+		// const topic = provisionSettings.topic
 		const policyName = `${stackName}-claim-policy`
 		console.debug(chalk.magenta(`Creating policy`), chalk.blue(policyName))
+		console.debug(`For region: ${env.region} and account ${env.account}`)
 		await iot.send(
 			new CreatePolicyCommand({
 				policyDocument: JSON.stringify({
@@ -100,16 +101,12 @@ export const generateClaimCertificate = ({
 						{
 							Effect: 'Allow',
 							Action: ['iot:Publish', 'iot:Receive'],
-							Resource: [
-								`arn:aws:iot:${env.region}:${env.account}:topic/${topic}/\${iot:ClientId}/*`,
-							],
+							Resource: [`arn:aws:iot:${env.region}:${env.account}:*`],
 						},
 						{
 							Effect: 'Allow',
 							Action: 'iot:Subscribe',
-							Resource: [
-								`arn:aws:iot:${env.region}:${env.account}:topicfilter/${topic}/\${iot:ClientId}/*`,
-							],
+							Resource: [`arn:aws:iot:${env.region}:${env.account}:*`],
 						},
 					],
 				}),
