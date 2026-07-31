@@ -1,4 +1,5 @@
 import { logger } from './util/logger.js'
+import { thingGroupFromSerialNumber } from './util/thingGroupFromSerialNumber.js'
 import mqtt, { MqttClient } from 'mqtt'
 import { fromEnv } from '@nordicsemiconductor/from-env'
 import { getSettings, Scope } from '../util/settings.js'
@@ -157,16 +158,8 @@ export const handler = async (event: {
 	log.debug(`thingName`, { thingName })
 	log.debug(`serialNumber`, { serialNumber })
 
-	let thingGroup = 'nowi_boards_v1_2'
-	if (typeof serialNumber === 'string') {
-		if (/0\d{3}$/.test(serialNumber)) {
-			// It's a building monitor
-			thingGroup = 'nowi_boards_v1_2'
-		} else if (/1\d{3}$/.test(serialNumber)) {
-			// It's a pipe monitor
-			thingGroup = 'pipe_monitor_boards_v0_2'
-		}
-	}
+	const thingGroup = thingGroupFromSerialNumber(serialNumber)
+	log.debug(`thingGroup`, { thingGroup })
 
 	const clientId = event.topic.replace(provisionTopic, '').split('/')?.[1] ?? ''
 	const client = mqtt.connect({
